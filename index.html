@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Grammar & Vocabulary Assessment</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --text-color: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --correct-bg: #dcfce7;
+      --correct-border: #22c55e;
+      --correct-text: #15803d;
+      --incorrect-bg: #fee2e2;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #b91c1c;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto 40px auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 24px 16px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      color: #0f172a;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 8px;
+      margin: 32px 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .exercise-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .exercise-header {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #334155;
+      margin-bottom: 16px;
+    }
+
+    .question-item {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .question-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .question-text {
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    /* Input Controls */
+    input[type="text"] {
+      width: 100%;
+      max-width: 320px;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      margin-top: 4px;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: 6px;
+      background-color: #fff;
+      outline: none;
+      cursor: pointer;
+      margin: 4px 0;
+    }
+
+    /* Feedback styling */
+    .feedback {
+      display: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .q-correct input,
+    .q-correct select {
+      background-color: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+    }
+
+    .q-incorrect input,
+    .q-incorrect select {
+      background-color: var(--incorrect-bg);
+      border-color: var(--incorrect-border);
+      color: var(--incorrect-text);
+    }
+
+    .q-correct .feedback {
+      display: inline-block;
+      background-color: var(--correct-bg);
+      color: var(--correct-text);
+    }
+
+    .q-incorrect .feedback {
+      display: inline-block;
+      background-color: var(--incorrect-bg);
+      color: var(--incorrect-text);
+    }
+
+    /* Controls & Results Bar */
+    .action-container {
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .btn-submit:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .results-card {
+      display: none;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 24px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .score-title {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      color: #0f172a;
+    }
+
+    .score-breakdown {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .score-box {
+      background: #f8fafc;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      min-width: 140px;
+    }
+
+    .score-box .val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .score-box .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Grammar & Vocabulary Test</h1>
+      <p>Complete all tasks and press Submit to evaluate your score.</p>
+    </header>
+
+    <form id="quiz-form" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+      <!-- ================= GRAMMAR SECTION ================= -->
+      <div class="section-title">Grammar</div>
+
+      <!-- G1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">1. Complete the sentences with the correct form of the verb in brackets. Use the Present perfect.</div>
+        
+        <div class="question-item" data-id="g1_1" data-answer="have you seen">
+          <div class="question-text">1) <input type="text" placeholder="your answer" /> (you / see) the new café near our school? (?)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g1_2" data-answer="has won">
+          <div class="question-text">2) My brother <input type="text" placeholder="your answer" /> (win) a sports competition! (+)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g1_3" data-answer="have not started,haven't started">
+          <div class="question-text">3) We <input type="text" placeholder="your answer" /> (not start) the test yet. (-)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g1_4" data-answer="have they called">
+          <div class="question-text">4) Why <input type="text" placeholder="your answer" /> (they / call) us this morning? (?)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g1_5" data-answer="have lost,'ve lost">
+          <div class="question-text">5) I <input type="text" placeholder="your answer" /> (lose) my coat. I can't find it anywhere! (+)</div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">2. Choose the correct option: Past Simple or Present Perfect.</div>
+        
+        <div class="question-item" data-id="g2_1" data-answer="has not finished">
+          <div class="question-text">1) She 
+            <select>
+              <option value="">-- select --</option>
+              <option value="did not finish">did not finish</option>
+              <option value="has not finished">has not finished</option>
+            </select> her dinner yet.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g2_2" data-answer="have dropped">
+          <div class="question-text">2) I 
+            <select>
+              <option value="">-- select --</option>
+              <option value="dropped">dropped</option>
+              <option value="have dropped">have dropped</option>
+            </select> my pencil. Can you help me look for it?
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g2_3" data-answer="have lived">
+          <div class="question-text">3) They 
+            <select>
+              <option value="">-- select --</option>
+              <option value="lived">lived</option>
+              <option value="have lived">have lived</option>
+            </select> in this house since 2018.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g2_4" data-answer="went">
+          <div class="question-text">4) We 
+            <select>
+              <option value="">-- select --</option>
+              <option value="went">went</option>
+              <option value="have gone">have gone</option>
+            </select> to the beach last summer.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g2_5" data-answer="Did you play">
+          <div class="question-text">5) 
+            <select>
+              <option value="">-- select --</option>
+              <option value="Did you play">Did you play</option>
+              <option value="Have you played">Have you played</option>
+            </select> football yesterday?
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">3. Complete the sentences using the Second conditional.</div>
+        
+        <div class="question-item" data-id="g3_1" data-answer="rained|would stay,rains|would stay">
+          <div class="question-text">1) If it <input type="text" style="max-width:120px;" placeholder="verb 1" /> (rain) tomorrow, we <input type="text" style="max-width:140px;" placeholder="verb 2" /> (stay) at home.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g3_2" data-answer="would buy|had">
+          <div class="question-text">2) She <input type="text" style="max-width:140px;" placeholder="verb 1" /> (buy) a new bike if she <input type="text" style="max-width:120px;" placeholder="verb 2" /> (have) enough money.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g3_3" data-answer="were|would play,was|would play">
+          <div class="question-text">3) If you <input type="text" style="max-width:120px;" placeholder="verb 1" /> (be) taller, you <input type="text" style="max-width:140px;" placeholder="verb 2" /> (play) basketball well.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g3_4" data-answer="would help|asked">
+          <div class="question-text">4) He <input type="text" style="max-width:140px;" placeholder="verb 1" /> (help) you if you <input type="text" style="max-width:120px;" placeholder="verb 2" /> (ask) him.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g3_5" data-answer="lived|would go">
+          <div class="question-text">5) If they <input type="text" style="max-width:120px;" placeholder="verb 1" /> (live) near the sea, they <input type="text" style="max-width:140px;" placeholder="verb 2" /> (go) swimming every day.</div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">4. Complete the sentences using the Past perfect form of the verbs.</div>
+        
+        <div class="question-item" data-id="g4_1" data-answer="had|started">
+          <div class="question-text">1) When we arrived at the party, the music <input type="text" style="max-width:100px;" placeholder="had" /> already <input type="text" style="max-width:140px;" placeholder="verb" /> (start).</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g4_2" data-answer="had|had">
+          <div class="question-text">2) She didn't want to eat because she <input type="text" style="max-width:100px;" placeholder="had" /> just <input type="text" style="max-width:140px;" placeholder="verb" /> (have) lunch.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g4_3" data-answer="had lost">
+          <div class="question-text">3) They were sad because they <input type="text" placeholder="your answer" /> (lose) the match.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g4_4" data-answer="had left">
+          <div class="question-text">4) I couldn't open the door because I <input type="text" placeholder="your answer" /> (leave) my keys at home.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g4_5" data-answer="had finished">
+          <div class="question-text">5) After he <input type="text" placeholder="your answer" /> (finish) his homework, he went out to play.</div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G5 -->
+      <div class="exercise-card">
+        <div class="exercise-header">5. Rewrite the sentences into Reported speech.</div>
+        
+        <div class="question-item" data-id="g5_1" data-answer="was busy then">
+          <div class="question-text">1) "I am busy <strong>now</strong>," he said.<br>&rarr; He said that he <input type="text" placeholder="your answer" /></div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g5_2" data-answer="had visited their grandmother the week before,had visited their grandmother the previous week,visited their grandmother the week before">
+          <div class="question-text">2) "We visited our grandmother last week," she said.<br>&rarr; She said that they <input type="text" placeholder="your answer" /></div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g5_3" data-answer="would call me that day,would call us that day,would call him that day,would call her that day">
+          <div class="question-text">3) "I will call you <strong>today</strong>," Tom said.<br>&rarr; Tom said that he <input type="text" placeholder="your answer" /></div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g5_4" data-answer="had finished the test that day">
+          <div class="question-text">4) "They have finished the test <strong>today</strong>," the teacher said.<br>&rarr; The teacher said that they <input type="text" placeholder="your answer" /></div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g5_5" data-answer="could not open the door then,couldn't open the door then">
+          <div class="question-text">5) "I can't open the door <strong>now</strong>," she said.<br>&rarr; She said that she <input type="text" placeholder="your answer" /></div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G6 -->
+      <div class="exercise-card">
+        <div class="exercise-header">6. Complete the sentences with the correct passive form.</div>
+        
+        <div class="question-item" data-id="g6_1" data-answer="are grown">
+          <div class="question-text">1) Many apples <input type="text" placeholder="your answer" /> (grow) in Spain. (PRESENT PASSIVE)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g6_2" data-answer="is cleaned">
+          <div class="question-text">2) This classroom <input type="text" placeholder="your answer" /> (clean) every day. (PRESENT PASSIVE)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g6_3" data-answer="was made">
+          <div class="question-text">3) The first computer <input type="text" placeholder="your answer" /> (make) many years ago. (PAST PASSIVE)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g6_4" data-answer="were given">
+          <div class="question-text">4) The students <input type="text" placeholder="your answer" /> (give) new books yesterday. (PAST PASSIVE)</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g6_5" data-answer="are made">
+          <div class="question-text">5) These toys <input type="text" placeholder="your answer" /> (make) of plastic. (PRESENT PASSIVE)</div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- G7 -->
+      <div class="exercise-card">
+        <div class="exercise-header">7. Choose the correct option.</div>
+        
+        <div class="question-item" data-id="g7_1" data-answer="been built">
+          <div class="question-text">1) A new park has 
+            <select>
+              <option value="">-- select --</option>
+              <option value="built">built</option>
+              <option value="been built">been built</option>
+            </select> near my house.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g7_2" data-answer="been found">
+          <div class="question-text">2) My lost dog has already 
+            <select>
+              <option value="">-- select --</option>
+              <option value="found">found</option>
+              <option value="been found">been found</option>
+            </select>.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g7_3" data-answer="be explained">
+          <div class="question-text">3) The rules will 
+            <select>
+              <option value="">-- select --</option>
+              <option value="be explained">be explained</option>
+              <option value="explain">explain</option>
+            </select> tomorrow.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g7_4" data-answer="be announced">
+          <div class="question-text">4) The winner will 
+            <select>
+              <option value="">-- select --</option>
+              <option value="announce">announce</option>
+              <option value="be announced">be announced</option>
+            </select> next week.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="g7_5" data-answer="been downloaded">
+          <div class="question-text">5) A new game has 
+            <select>
+              <option value="">-- select --</option>
+              <option value="been downloaded">been downloaded</option>
+              <option value="downloaded">downloaded</option>
+            </select> this week.
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+
+      <!-- ================= VOCABULARY SECTION ================= -->
+      <div class="section-title">Vocabulary</div>
+
+      <!-- V1 -->
+      <div class="exercise-card">
+        <div class="exercise-header">1. Underline the correct answer</div>
+        
+        <div class="question-item" data-id="v1_1" data-answer="food van">
+          <div class="question-text">1) On the weekend, a local 
+            <select>
+              <option value="">-- select --</option>
+              <option value="food van">food van</option>
+              <option value="digital camera">digital camera</option>
+            </select> parked near the park selling fresh ice cream.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_2" data-answer="e-book reader">
+          <div class="question-text">2) Before taking off on the train, she downloaded three stories onto her 
+            <select>
+              <option value="">-- select --</option>
+              <option value="e-book reader">e-book reader</option>
+              <option value="camcorder">camcorder</option>
+            </select>.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_3" data-answer="timetable">
+          <div class="question-text">3) We checked the airport 
+            <select>
+              <option value="">-- select --</option>
+              <option value="timetable">timetable</option>
+              <option value="walking tour">walking tour</option>
+            </select> to find out when our plane arrives.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_4" data-answer="wireless speakers">
+          <div class="question-text">4) He connected his phone to the 
+            <select>
+              <option value="">-- select --</option>
+              <option value="sandwich bar">sandwich bar</option>
+              <option value="wireless speakers">wireless speakers</option>
+            </select> so everyone could listen to the music.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_5" data-answer="small tea room">
+          <div class="question-text">5) After walking around the museum all morning, they sat down in a quiet 
+            <select>
+              <option value="">-- select --</option>
+              <option value="small tea room">small tea room</option>
+              <option value="timetable for tea">timetable for tea</option>
+            </select> for warm drinks.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_6" data-answer="boat trip">
+          <div class="question-text">6) They bought tickets for a 
+            <select>
+              <option value="">-- select --</option>
+              <option value="digital camera">digital camera</option>
+              <option value="boat trip">boat trip</option>
+            </select> along the river to see the bridges.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_7" data-answer="camcorder">
+          <div class="question-text">7) My uncle brought his high-quality 
+            <select>
+              <option value="">-- select --</option>
+              <option value="camcorder">camcorder</option>
+              <option value="timetable">timetable</option>
+            </select> to film his daughter's birthday party.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_8" data-answer="walking tour">
+          <div class="question-text">8) The tourists signed up for a historical 
+            <select>
+              <option value="">-- select --</option>
+              <option value="walking tour">walking tour</option>
+              <option value="food van">food van</option>
+            </select> to explore the center of town.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_9" data-answer="sandwich bar">
+          <div class="question-text">9) If you are hungry after class, we can eat a meal at the quick 
+            <select>
+              <option value="">-- select --</option>
+              <option value="boat trip">boat trip</option>
+              <option value="sandwich bar">sandwich bar</option>
+            </select>.
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v1_10" data-answer="digital camera">
+          <div class="question-text">10) She set up her new 
+            <select>
+              <option value="">-- select --</option>
+              <option value="digital camera">digital camera</option>
+              <option value="e-book reader">e-book reader</option>
+            </select> on a table to take photos of her friends.
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- V2 -->
+      <div class="exercise-card">
+        <div class="exercise-header">2. Complete with the correct form: -ing or to + infinitive.</div>
+        
+        <div class="question-item" data-id="v2_1" data-answer="to drive">
+          <div class="question-text">1) My older brother offered <input type="text" placeholder="your answer" /> (drive) us to the football stadium.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v2_2" data-answer="staying">
+          <div class="question-text">2) To feel energetic in the morning, he avoids <input type="text" placeholder="your answer" /> (stay) up late watching TV.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v2_3" data-answer="to book">
+          <div class="question-text">3) After looking at three different places, they decided <input type="text" placeholder="your answer" /> (book) a hotel by the lake.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v2_4" data-answer="cleaning">
+          <div class="question-text">4) The students finished <input type="text" placeholder="your answer" /> (clean) the lab before the teacher locked the door.</div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v2_5" data-answer="cooking">
+          <div class="question-text">5) On sunny afternoons, I really enjoy <input type="text" placeholder="your answer" /> (cook) barbecue meals for my family.</div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- V3 -->
+      <div class="exercise-card">
+        <div class="exercise-header">3. Match the words to make compound nouns.</div>
+        
+        <div class="question-item" data-id="v3_1" data-answer="guard,b">
+          <div class="question-text">1) security 
+            <select>
+              <option value="">-- match --</option>
+              <option value="drop">a) drop</option>
+              <option value="guard">b) guard</option>
+              <option value="drop">c) drop</option>
+              <option value="luggage">d) luggage</option>
+              <option value="number">e) number</option>
+            </select>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v3_2" data-answer="luggage,d">
+          <div class="question-text">2) hand 
+            <select>
+              <option value="">-- match --</option>
+              <option value="drop">a) drop</option>
+              <option value="guard">b) guard</option>
+              <option value="drop">c) drop</option>
+              <option value="luggage">d) luggage</option>
+              <option value="number">e) number</option>
+            </select>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v3_3" data-answer="number,e">
+          <div class="question-text">3) flight 
+            <select>
+              <option value="">-- match --</option>
+              <option value="drop">a) drop</option>
+              <option value="guard">b) guard</option>
+              <option value="drop">c) drop</option>
+              <option value="luggage">d) luggage</option>
+              <option value="number">e) number</option>
+            </select>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v3_4" data-answer="drop,a,c">
+          <div class="question-text">4) bag 
+            <select>
+              <option value="">-- match --</option>
+              <option value="drop">a) drop</option>
+              <option value="guard">b) guard</option>
+              <option value="drop">c) drop</option>
+              <option value="luggage">d) luggage</option>
+              <option value="number">e) number</option>
+            </select>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v3_5" data-answer="pass">
+          <div class="question-text">5) boarding 
+            <select>
+              <option value="">-- match --</option>
+              <option value="drop">a) drop</option>
+              <option value="guard">b) guard</option>
+              <option value="drop">c) drop</option>
+              <option value="luggage">d) luggage</option>
+              <option value="number">e) number</option>
+            </select>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- V4 -->
+      <div class="exercise-card">
+        <div class="exercise-header">4. Fill in the gaps with the correct prepositions.</div>
+        
+        <div class="question-item" data-id="v4_1" data-answer="from">
+          <div class="question-text">1) How many days did it take for your brother to recover 
+            <select>
+              <option value="">-- select --</option>
+              <option value="with">with</option>
+              <option value="from">from</option>
+            </select> the flu?
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v4_2" data-answer="about">
+          <div class="question-text">2) What kind of strange things do you usually dream 
+            <select>
+              <option value="">-- select --</option>
+              <option value="about">about</option>
+              <option value="to">to</option>
+            </select> when you are sleeping?
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v4_3" data-answer="to">
+          <div class="question-text">3) When was the last time you talked 
+            <select>
+              <option value="">-- select --</option>
+              <option value="at">at</option>
+              <option value="to">to</option>
+            </select> your English teacher after class?
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v4_4" data-answer="with">
+          <div class="question-text">4) Who do you usually spend the most time 
+            <select>
+              <option value="">-- select --</option>
+              <option value="from">from</option>
+              <option value="with">with</option>
+            </select> during your winter holidays?
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question-item" data-id="v4_5" data-answer="in">
+          <div class="question-text">5) Have you ever taken part 
+            <select>
+              <option value="">-- select --</option>
+              <option value="on">on</option>
+              <option value="in">in</option>
+            </select> a drawing contest at your school?
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </div>
+
+      <!-- Submission Control -->
+      <div class="action-container">
+        <button type="button" id="submit-btn" class="btn-submit" onclick="gradeQuiz()">Check Answers</button>
+      </div>
+
+    </form>
+
+    <!-- Score Card -->
+    <div id="results" class="results-card">
+      <div class="score-title">Assessment Summary</div>
+      <div class="score-breakdown">
+        <div class="score-box">
+          <div class="val" id="grammar-score">0 / 35</div>
+          <div class="label">Grammar Score</div>
+        </div>
+        <div class="score-box">
+          <div class="val" id="vocab-score">0 / 25</div>
+          <div class="label">Vocabulary Score</div>
+        </div>
+        <div class="score-box">
+          <div class="val" id="total-score">0 / 60</div>
+          <div class="label">Total Score</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // String Normalization Utility
+    function normalizeStr(str) {
+      if (!str) return '';
+      return str.toString()
+        .toLowerCase()
+        .trim()
+        .replace(/[’']/g, "'") // Standardize apostrophes
+        .replace(/\s+/g, ' ')   // Normalize internal spaces
+        .replace(/[.,?!]/g, '');// Remove punctuation
+    }
+
+    let submitted = false;
+
+    function gradeQuiz() {
+      if (submitted) return;
+
+      let grammarCorrect = 0;
+      let vocabCorrect = 0;
+
+      const questions = document.querySelectorAll('.question-item');
+
+      questions.forEach(q => {
+        const qId = q.getAttribute('data-id');
+        const rawAccepted = q.getAttribute('data-answer');
+        const inputs = q.querySelectorAll('input[type="text"], select');
+        const feedbackEl = q.querySelector('.feedback');
+
+        let isCorrect = false;
+
+        // Process user inputs for this question item
+        if (inputs.length === 1) {
+          const userVal = normalizeStr(inputs[0].value);
+          const acceptedOptions = rawAccepted.split(',').map(a => normalizeStr(a));
+          if (acceptedOptions.includes(userVal)) {
+            isCorrect = true;
+          }
+        } else if (inputs.length === 2) {
+          // Double input fields (e.g., conditionals, split verb phrases)
+          const val1 = normalizeStr(inputs[0].value);
+          const val2 = normalizeStr(inputs[1].value);
+          const userCombined = val1 + '|' + val2;
+
+          const acceptedPairs = rawAccepted.split(',').map(pair => {
+            const parts = pair.split('|');
+            return normalizeStr(parts[0]) + '|' + normalizeStr(parts[1]);
+          });
+
+          if (acceptedPairs.includes(userCombined)) {
+            isCorrect = true;
+          }
+        }
+
+        // Apply state classes
+        if (isCorrect) {
+          q.classList.add('q-correct');
+          feedbackEl.textContent = 'Correct!';
+          if (qId.startsWith('g')) grammarCorrect++;
+          if (qId.startsWith('v')) vocabCorrect++;
+        } else {
+          q.classList.add('q-incorrect');
+          // Format expected answer for display
+          let primaryAnswer = rawAccepted.split(',')[0].replace('|', ' ... ');
+          feedbackEl.textContent = 'Incorrect. Correct: ' + primaryAnswer;
+        }
+
+        // Lock form inputs
+        inputs.forEach(inp => inp.disabled = true);
+      });
+
+      // Show Results
+      const totalScore = grammarCorrect + vocabCorrect;
+      document.getElementById('grammar-score').textContent = `${grammarCorrect} / 35`;
+      document.getElementById('vocab-score').textContent = `${vocabCorrect} / 25`;
+      document.getElementById('total-score').textContent = `${totalScore} / 60 (${Math.round((totalScore/60)*100)}%)`;
+      
+      const resultsEl = document.getElementById('results');
+      resultsEl.style.display = 'block';
+      resultsEl.scrollIntoView({ behavior: 'smooth' });
+
+      // Disable button
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Completed';
+      
+      submitted = true;
+    }
+  </script>
+</body>
+</html>
